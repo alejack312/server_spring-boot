@@ -12,21 +12,39 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/*
+ * This class is a controller that handles the searching of broadband data.
+ * It pings the ACS API to get broadband data for a given state and county.
+ */
 @RestController
 public class BroadbandController {
   // Cache Object
   private BroadbandCache cache;
 
   /**
-   * Constructor for the SearchCSVHandler.
-   *
-   * @param data Data object
+   * Constructor for BroadbandController.
+   * @param cache
+   * 
+   * The constructor takes a BroadbandCache object as a parameter. This BroadbandCache object is
+   * autowired by Spring, which means that Spring will automatically provide an instance of the
+   * BroadbandCache class to this class when it is created. This is an example of dependency
+   * injection, which is a design pattern that allows for the separation of concerns in a program.
+   * 
+   * The cache object contains the cached broadband data that is loaded into the server.
    */
   @Autowired
   public BroadbandController(BroadbandCache cache) {
     this.cache = new BroadbandCache();
   }
 
+  /**
+   * This method handles the searching of broadband data.
+   * 
+   * @param stateName
+   * @param countyName
+   * @param caching
+   * @return
+   */
   @GetMapping("/api/broadband")
   public String broadband(
       @RequestParam("state") @NotBlank(message = "Filepath is required") String stateName,
