@@ -3,6 +3,7 @@ package edu.brown.cs.student.main.controllers;
 import edu.brown.cs.student.main.Data;
 import edu.brown.cs.student.main.interfaces.CreatorInterfaces.TrivialCreator;
 import edu.brown.cs.student.main.parser.Parser;
+import edu.brown.cs.student.main.responses.CSVParseSuccess;
 
 import java.io.FileReader;
 import java.util.List;
@@ -76,7 +77,7 @@ public class LoadController {
       // Save the data from the parsed CSV file
       this._data.setParser(parser);
 
-      return "CSV loaded successfully";
+      return new CSVParseSuccess(filepathString).serialize();
     } catch (Exception e) {
       return "Could not find a csv file at " + filepathString;
     }
