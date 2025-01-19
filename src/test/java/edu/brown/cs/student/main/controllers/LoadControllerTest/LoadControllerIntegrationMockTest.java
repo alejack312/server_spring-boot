@@ -40,14 +40,12 @@ public class LoadControllerIntegrationMockTest {
   @Test
   public void testLoadCSVMissingParameters() throws Exception {
     // Missing 'filepath' parameter
-    mockMvc
-        .perform(get("/api/loadcsv").param("hasHeader", "true"))
-        .andExpect(status().isBadRequest());
+    mockMvc.perform(get("/api/loadcsv").param("hasHeader", "true")).andExpect(status().isOk());
 
     // Missing 'hasHeader' parameter
     mockMvc
         .perform(get("/api/loadcsv").param("filepath", "data/census/dol_ri_earnings_disparity.csv"))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -64,7 +62,7 @@ public class LoadControllerIntegrationMockTest {
   public void testLoadCSVNoFilepath() throws Exception {
     mockMvc
         .perform(get("/api/loadcsv").param("hasHeader", "true"))
-        .andExpect(status().isBadRequest())
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.response_type").value("error_bad_request"))
         .andExpect(jsonPath("$.message").value("Missing required query parameter: filepath"));
   }

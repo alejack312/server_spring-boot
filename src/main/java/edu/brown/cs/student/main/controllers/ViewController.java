@@ -2,6 +2,7 @@ package edu.brown.cs.student.main.controllers;
 
 import edu.brown.cs.student.main.APIUtilities;
 import edu.brown.cs.student.main.Data;
+import edu.brown.cs.student.main.responses.ErrorDatasource;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,10 @@ public class ViewController {
   }
 
   @GetMapping("/api/viewcsv")
-  public String viewCSV() {
+  public Object viewCSV() {
+
     if (this._data.getParser() == null) {
-      System.out.println("There is no CSV file to be viewed");
-      return "There is no CSV file to be viewed";
+      return new ErrorDatasource("There is no CSV file to be viewed").serialize();
     }
 
     // From September 21st Livecode

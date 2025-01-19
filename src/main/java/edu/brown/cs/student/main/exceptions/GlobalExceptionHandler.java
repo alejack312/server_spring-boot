@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     String name = ex.getParameterName();
     String message = String.format("Missing required query parameter: %s", name);
     ErrorBadRequest error = new ErrorBadRequest(message);
-    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(error, HttpStatus.OK);
   }
 
   /**
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorBadJson> handleConstraintViolation(ConstraintViolationException ex) {
     String message = ex.getConstraintViolations().iterator().next().getMessage();
     ErrorBadJson error = new ErrorBadJson(message);
-    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(error, HttpStatus.OK);
   }
 
   /**
@@ -50,6 +50,6 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorBadJson> handleGenericException(Exception ex) {
     ErrorBadJson error = new ErrorBadJson("An unexpected error occurred.");
-    return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    return new ResponseEntity<>(error, HttpStatus.OK);
   }
 }

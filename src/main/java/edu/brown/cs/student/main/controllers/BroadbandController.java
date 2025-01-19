@@ -67,10 +67,9 @@ public class BroadbandController {
         responseMap.put("time", time);
         responseMap.put("state", stateName);
         responseMap.put("county", countyName);
-        responseMap.put(
-            "broadbandData", ACSDatasource.getBroadbandDataCache(stateName, countyName, cache));
+        responseMap.put("data", ACSDatasource.getBroadbandDataCache(stateName, countyName, cache));
       } else {
-        responseMap.put("reponse_type", "success");
+        responseMap.put("response_type", "success");
         responseMap.put("date", date);
         responseMap.put("time", time);
         responseMap.put("state", stateName);
@@ -79,7 +78,7 @@ public class BroadbandController {
       }
     } catch (Exception e) {
       System.out.println(e.toString());
-      responseMap.put("reponse_type", "error");
+      responseMap.put("response_type", "error");
       responseMap.put("state", stateName);
       responseMap.put("county", countyName);
       responseMap.put("error_message", e.getMessage());

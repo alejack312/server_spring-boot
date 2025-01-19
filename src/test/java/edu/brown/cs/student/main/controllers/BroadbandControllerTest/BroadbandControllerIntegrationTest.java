@@ -1,11 +1,13 @@
-package edu.brown.cs.student.main.controllers.LoadControllerTest;
+package edu.brown.cs.student.main.controllers.BroadbandControllerTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.SpringBootServerApplication;
+import edu.brown.cs.student.main.broadband.BroadbandCache;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -14,34 +16,45 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import okio.Buffer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
 
 /** Integration tests for the LoadController class. */
 @SpringBootTest(
     classes = SpringBootServerApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoadControllerIntegrationTest {
+public class BroadbandControllerIntegrationTest {
+
   // Random port to avoid conflicts with other tests
   @LocalServerPort private int port;
 
   private JsonAdapter<Map<String, Object>> adapter;
+
   private final Type mapStringObject =
       Types.newParameterizedType(Map.class, String.class, Object.class);
 
-  @BeforeEach
-  public void setup() {
+  @BeforeAll
+  public static void setup_before_everything() {
+    // Stop the server if it's already running
     Logger.getLogger("").setLevel(Level.WARNING); // empty name = root logger
+  }
+
+  @BeforeEach
+  public void setup() throws IOException {
     Moshi moshi = new Moshi.Builder().build();
     adapter = moshi.adapter(mapStringObject);
+
+    // Mock Object
+    BroadbandCache cache = new BroadbandCache();
   }
 
   private HttpURLConnection tryRequest(String apiCall) throws IOException {
     // Configure the connection (but don't actually send the request yet)
     URL requestURL = new URL("http://localhost:" + port + "/" + apiCall);
+    System.out.println(requestURL);
     HttpURLConnection clientConnection = (HttpURLConnection) requestURL.openConnection();
 
     // The default method is "GET", which is what we're using here.
@@ -52,26 +65,25 @@ public class LoadControllerIntegrationTest {
     return clientConnection;
   }
 
-  /** Tests the loadcsv endpoint with a valid CSV file. */
   @Test
-  public void testLoadCSVSuccess() throws IOException {
+  public void testBroadbandCachingSuccess() throws IOException {
     // Load a valid CSV file
-    // Test basic LoadCSV cases
-    HttpURLConnection riEarningsConnection =
-        tryRequest("api/loadcsv?filepath=census/dol_ri_earnings_disparity.csv&hasHeader=true");
-    assertEquals(200, riEarningsConnection.getResponseCode());
-
+    HttpURLConnection broadbandConnectionOne =
+        tryRequest("api/broadband?state=Florida&county=Broward&caching=true");
+    assertEquals(200, broadbandConnectionOne.getResponseCode());
     Map<String, Object> body =
-        adapter.fromJson(new Buffer().readFrom(riEarningsConnection.getInputStream()));
-    assertEquals("success", body.get("response_type"));
-    assertEquals("census/dol_ri_earnings_disparity.csv", body.get("filepath"));
-  }
+        adapter.fromJson(new Buffer().readFrom(broadbandConnectionOne.getInputStream()));
+    assertEquals("Florida", body.get("state"));
+    assertEquals("Broward", body.get("county"));
+    assertNotNull(body.get("data"));
 
-  /** Tests the loadcsv endpoint with missing parameters. */
-  @Test
-  public void testLoadCSVMissingParameters() throws IOException {
-    // Missing 'filepath' parameter
-    HttpURLConnection urlMissingFilepath = tryRequest("api/loadcsv?hasHeader=true");
-    assertEquals(200, urlMissingFilepath.getResponseCode());
+    // Test basic Broadband cases
+    HttpURLConnection broadbandConnectionTwo =
+        tryRequest("api/broadband?state=Florida&county=Broward&caching=true");
+    assertEquals(200, broadbandConnectionTwo.getResponseCode());
+    body = adapter.fromJson(new Buffer().readFrom(broadbandConnectionTwo.getInputStream()));
+    assertEquals("Florida", body.get("state"));
+    assertEquals("Broward", body.get("county"));
+    assertNotNull(body.get("data"));
   }
 }

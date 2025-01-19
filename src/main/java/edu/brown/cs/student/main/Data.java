@@ -2,7 +2,6 @@ package edu.brown.cs.student.main;
 
 import edu.brown.cs.student.main.parser.Parser;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,6 +37,6 @@ public class Data {
    * @param parser Parser containing the parsed data.
    */
   public void setParser(Parser<List<String>> parser) {
-    this.parser = Objects.requireNonNull(parser, "Parser cannot be null");
+    this.parser = parser;
   }
 }
