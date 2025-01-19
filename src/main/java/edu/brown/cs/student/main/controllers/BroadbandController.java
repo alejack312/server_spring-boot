@@ -23,14 +23,14 @@ public class BroadbandController {
 
   /**
    * Constructor for BroadbandController.
+   *
    * @param cache
-   * 
-   * The constructor takes a BroadbandCache object as a parameter. This BroadbandCache object is
-   * autowired by Spring, which means that Spring will automatically provide an instance of the
-   * BroadbandCache class to this class when it is created. This is an example of dependency
-   * injection, which is a design pattern that allows for the separation of concerns in a program.
-   * 
-   * The cache object contains the cached broadband data that is loaded into the server.
+   *     <p>The constructor takes a BroadbandCache object as a parameter. This BroadbandCache object
+   *     is autowired by Spring, which means that Spring will automatically provide an instance of
+   *     the BroadbandCache class to this class when it is created. This is an example of dependency
+   *     injection, which is a design pattern that allows for the separation of concerns in a
+   *     program.
+   *     <p>The cache object contains the cached broadband data that is loaded into the server.
    */
   @Autowired
   public BroadbandController(BroadbandCache cache) {
@@ -39,7 +39,7 @@ public class BroadbandController {
 
   /**
    * This method handles the searching of broadband data.
-   * 
+   *
    * @param stateName
    * @param countyName
    * @param caching

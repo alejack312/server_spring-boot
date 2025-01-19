@@ -4,13 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootFirebaseApplication {
+public class SpringBootServerApplication {
   /*
    * Main method to run the Spring Boot application.
-   * 
+   *
    * @param args: command line arguments
    */
   public static void main(String[] args) {
-    SpringApplication.run(SpringBootFirebaseApplication.class, args);
+    SpringApplication.run(SpringBootServerApplication.class, args);
   }
 }

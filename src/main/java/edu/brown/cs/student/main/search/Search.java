@@ -2,7 +2,6 @@ package edu.brown.cs.student.main.search;
 
 import edu.brown.cs.student.main.interfaces.CreatorInterfaces.TrivialCreator;
 import edu.brown.cs.student.main.parser.Parser;
-
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;

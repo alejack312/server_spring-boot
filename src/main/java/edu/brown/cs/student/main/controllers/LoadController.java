@@ -4,7 +4,7 @@ import edu.brown.cs.student.main.Data;
 import edu.brown.cs.student.main.interfaces.CreatorInterfaces.TrivialCreator;
 import edu.brown.cs.student.main.parser.Parser;
 import edu.brown.cs.student.main.responses.CSVParseSuccess;
-
+import edu.brown.cs.student.main.responses.ErrorBadRequest;
 import java.io.FileReader;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 /*
  * This class is a controller that handles the loading of a CSV file into the server.
- * 
+ *
  * The class is annotated with @RestController, which tells Spring that this class is a
  * controller that handles HTTP requests. The class is also annotated with @Validated,
  * which tells Spring to validate the input parameters of the methods in this class.
- * 
+ *
  * The class has a constructor that takes a Data object as a parameter. This Data object
  * is autowired by Spring, which means that Spring will automatically provide an instance
  * of the Data class to this class when it is created. This is an example of dependency
@@ -34,10 +34,9 @@ public class LoadController {
 
   /**
    * Constructor for LoadController.
-   * 
+   *
    * @param data: Data object that stores the parsed CSV data.
-   * 
-   * The data object contains the parsed CSV data that is loaded into the server.
+   *     <p>The data object contains the parsed CSV data that is loaded into the server.
    */
   @Autowired
   public LoadController(Data data) {
@@ -46,21 +45,22 @@ public class LoadController {
 
   /**
    * This method handles the loading of a CSV file into the server.
-   * 
-   * The method is annotated with @GetMapping, which tells Spring that this method
-   * should be called when an HTTP GET request is sent to the specified endpoint.
-   * The method takes two parameters: filepathString and hasHeader. The @RequestParam
-   * annotation tells Spring to bind the value of the query parameter with the name
-   * "filepath" to the filepathString parameter, and the value of the query parameter
-   * with the name "hasHeader" to the hasHeader parameter. The @NotBlank annotation
-   * tells Spring to validate that the parameters are not blank.
-   * 
+   *
+   * <p>The method is annotated with @GetMapping, which tells Spring that this method should be
+   * called when an HTTP GET request is sent to the specified endpoint. The method takes two
+   * parameters: filepathString and hasHeader. The @RequestParam annotation tells Spring to bind the
+   * value of the query parameter with the name "filepath" to the filepathString parameter, and the
+   * value of the query parameter with the name "hasHeader" to the hasHeader parameter.
+   * The @NotBlank annotation tells Spring to validate that the parameters are not blank.
+   *
    * @param filepathString
    * @param hasHeader
    * @return
    */
+
+  // http://localhost:3232/api/loadcsv
   @GetMapping("/api/loadcsv")
-  public String loadCSV(
+  public Object loadCSV(
       @RequestParam("filepath") @NotBlank(message = "Filepath is required") String filepathString,
       @RequestParam("hasHeader") @NotBlank(message = "hasHeader parameter is required")
           String hasHeader) {
@@ -79,7 +79,7 @@ public class LoadController {
 
       return new CSVParseSuccess(filepathString).serialize();
     } catch (Exception e) {
-      return "Could not find a csv file at " + filepathString;
+      return new ErrorBadRequest("Could not find a csv file at " + filepathString).serialize();
     }
   }
 }
